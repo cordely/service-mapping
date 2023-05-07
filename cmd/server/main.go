@@ -37,7 +37,7 @@ func main() {
 		g.Go(func() error {
 			for {
 				fmt.Printf("%s start port forwarding \n", k)
-				p := exec.Command("/usr/bin/kubectl", strings.Split(v, " ")...)
+				p := exec.Command("kubectl", strings.Split(v, " ")...)
 				p.Stdout = &WrapWriter{Writer: os.Stdout, Name: k}
 				p.Stderr = &WrapWriter{Writer: os.Stderr, Name: k}
 				if err := p.Start(); err != nil {
