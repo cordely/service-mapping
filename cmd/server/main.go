@@ -16,7 +16,8 @@ type WrapWriter struct {
 }
 
 func (w *WrapWriter) Write(p []byte) (n int, err error) {
-	return w.Writer.Write(append([]byte(fmt.Sprintf("%v:\n", w.Name)), p...))
+	w.Writer.Write([]byte(w.Name + ": "))
+	return w.Writer.Write(p)
 }
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 		name, args := k, v
 		g.Go(func() error {
 			for {
-				cmd := exec.Command("/usr/bin/kubectl", strings.Split(args, " ")...)
+				cmd := exec.Command("kubectl", strings.Split(args, " ")...)
 				cmd.Stdout = &WrapWriter{Writer: os.Stdout, Name: name}
 				cmd.Stderr = &WrapWriter{Writer: os.Stderr, Name: name}
 				if err := cmd.Start(); err != nil {
